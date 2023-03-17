@@ -5,12 +5,12 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-
+ 
 dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^6.0.12
-  usb_serial: ^0.3.0
+  usb_serial: ^0.4.0
 
 flutter:
   uses-material-design: true

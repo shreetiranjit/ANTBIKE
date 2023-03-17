@@ -140,10 +140,10 @@ packages:
     dependency: "direct main"
     description:
       name: usb_serial
-      sha256: f9f836b505517a162f217b51135cf496eccc96f592852c286dbb98a4b27470c6
+      sha256: "031be280a45ecfe86afb5ecf7871d308f8f00121c91d03a943e2bd9de37a51ee"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.0"
   vector_math:
     dependency: transitive
     description:
