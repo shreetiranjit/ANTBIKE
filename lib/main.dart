@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:usb_serial/usb_serial.dart';
+import 'login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,7 @@ class _EVControlPageState extends State<EVControlPage> {
   bool _isPowerOn = true;
   int _speed = 0;
 
-  // Add this method to communicate with the Arduino Uno
+  // this method to communicate with the Arduino Uno
   Future<void> _sendMessage(String message) async {
     List<UsbDevice> devices = await UsbSerial.listDevices();
     if (devices.isEmpty) {
@@ -59,7 +60,8 @@ class _EVControlPageState extends State<EVControlPage> {
     await port.setDTR(true);
     await port.setRTS(true);
 
-    port.setPortParameters(9600, UsbPort.DATABITS_8, UsbPort.STOPBITS_1, UsbPort.PARITY_NONE);
+    port.setPortParameters(
+        9600, UsbPort.DATABITS_8, UsbPort.STOPBITS_1, UsbPort.PARITY_NONE);
 
     await port.write(Uint8List.fromList(message.codeUnits));
     await port.close();
@@ -126,78 +128,77 @@ class _EVControlPageState extends State<EVControlPage> {
                 ),
                 Expanded(
                   child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    AspectRatio(
-                      aspectRatio:
-                          1.0, // Adjust the aspect ratio as needed for your image
-                      child: LayoutBuilder(
-                        builder: (BuildContext context,
-                            BoxConstraints constraints) {
-                          return Container(
-                            width: constraints.maxWidth,
-                            height: constraints.maxHeight,
-                            child: Image.asset('assets/car_top_view.png',
-                                fit: BoxFit.contain),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      AspectRatio(
+                        aspectRatio:
+                            1.0, // Adjust the aspect ratio as needed for your image
+                        child: LayoutBuilder(
+                          builder: (BuildContext context,
+                              BoxConstraints constraints) {
+                            return Container(
+                              width: constraints.maxWidth,
+                              height: constraints.maxHeight,
+                              child: Image.asset('assets/car_top_view.png',
+                                  fit: BoxFit.contain),
+                            );
+                          },
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          FloatingActionButton(
+                            onPressed: _toggleDirection,
+                            child: Text(_isForward ? 'F' : 'R'),
+                          ),
+                          FloatingActionButton(
+                            onPressed: _toggleHeadlight,
+                            backgroundColor:
+                                _isHeadlightOn ? Colors.yellow : null,
+                            child: Icon(Icons.light_rounded),
+                          ),
+                          FloatingActionButton(
+                            onPressed: _openGoogleMaps,
+                            child: Icon(Icons.map),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Column(
+                    children: [
+                      FloatingActionButton(
+                        onPressed: _togglePower,
+                        backgroundColor: _isPowerOn ? Colors.green : Colors.red,
+                        child: Icon(Icons.power_settings_new),
+                      ),
+                      SizedBox(height: 10),
+                      FloatingActionButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SettingsPage()),
                           );
                         },
+                        child: Icon(Icons.settings),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        FloatingActionButton(
-                          onPressed: _toggleDirection,
-                          child: Text(_isForward ? 'F' : 'R'),
-                        ),
-                        FloatingActionButton(
-                          onPressed: _toggleHeadlight,
-                          backgroundColor:
-                              _isHeadlightOn ? Colors.yellow : null,
-                          child: Icon(Icons.light_rounded),
-                        ),
-                        FloatingActionButton(
-                          onPressed: _openGoogleMaps,
-                          child: Icon(Icons.map),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: Column(
-                children: [
-                  FloatingActionButton(
-                    onPressed: _togglePower,
-                    backgroundColor: _isPowerOn ? Colors.green : Colors.red,
-                    child: Icon(Icons.power_settings_new),
-                  ),
-                  SizedBox(height: 10),
-                  FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SettingsPage()),
-                      );
-                    },
-                    child: Icon(Icons.settings),
-                  ),
-                ],
-              ),
+              ],
             ),
           ],
         ),
-        ],
-        ) ,
       ),
-    );  
+    );
   }
 }
-  
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -229,7 +230,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             title: Text('Login as user'),
             onTap: () {
-              // Implement user login functionality here
+              LoginPage();
             },
           ),
         ],
@@ -237,4 +238,3 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
