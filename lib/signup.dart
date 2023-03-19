@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -7,6 +9,24 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   bool _hidePassword = true;
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _storeUserData(String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, String> newUser = {email: password};
+    String existingUsersJson = prefs.getString('users') ?? json.encode({});
+    Map<String, dynamic> existingUsers = json.decode(existingUsersJson);
+    existingUsers.addAll(newUser);
+    await prefs.setString('users', json.encode(existingUsers));
+  }
+
+  Future<void> printStoredData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String usersJson = prefs.getString('users') ?? 'No users found';
+    print('Stored users: $usersJson');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildNameField() {
     return Container(
       child: TextField(
+        controller: _nameController,
         decoration: InputDecoration(
           labelText: "Name",
         ),
@@ -60,6 +81,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildEmailField() {
     return Container(
       child: TextField(
+        controller: _emailController,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           labelText: "Email",
@@ -71,6 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildPasswordField() {
     return Container(
       child: TextField(
+        controller: _passwordController,
         obscureText: _hidePassword,
         decoration: InputDecoration(
           labelText: "Password",
@@ -93,8 +116,26 @@ class _SignUpPageState extends State<SignUpPage> {
       height: 50,
       child: ElevatedButton(
         child: Text("Sign up"),
-        onPressed: () {
-          // perform sign-up action
+        onPressed: () async {
+          String name = _nameController.text.trim();
+          String email = _emailController.text.trim();
+          String password = _passwordController.text.trim();
+          if (name.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
+            await _storeUserData(email, password);
+            await printStoredData();
+            // Show a success message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Successfully signed up!')),
+            );
+            // Navigate back to the login page after a delay
+            Future.delayed(Duration(seconds: 2), () {
+              Navigator.pop(context);
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Please fill all fields')),
+            );
+          }
         },
       ),
     );
