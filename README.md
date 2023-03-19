@@ -1,16 +1,53 @@
-# antbike
+# ANT BIKE
 
-A new Flutter project.
+A Flutter application to control an electric vehicle using Arduino Uno R3. The app allows you to change the vehicle's direction, toggle the headlights, and monitor the vehicle's speed.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Toggle vehicle direction (Forward/Reverse)
+- Toggle headlights (On/Off)
+- Display vehicle speed (kmph)
+- Integration with Google Maps
+- Settings page
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Requirements
+
+- Flutter SDK
+- Android Studio or VS Code with Flutter plugin
+- Arduino Uno R3 board
+- USB OTG cable (to connect the Arduino board to the mobile device)
+- 2-channel relay module
+
+## Setup
+
+1. Clone the repository:
+
+git clone https://github.com/shreetiranjit/ANTBIKE/
+
+2. Navigate to the project folder:
+
+cd ev-control-app
+
+3. Install the dependencies:
+
+flutter pub get
+
+4. Connect your Android device or open the Android emulator.
+
+5. Run the app:
+
+flutter run
+
+## Arduino
+
+Upload the Arduino code provided in this repository to your Arduino Uno R3 board. 
+Connect the 2-channel relay module to the Arduino board with the following connections:
+
+- Direction Relay: Pin D3
+- Headlight Relay: Pin D4
+
+
+
+
