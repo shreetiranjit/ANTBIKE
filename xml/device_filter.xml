@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 0x0403 / 0x6001: FTDI FT232R UART -->
+    // the vid and pid for the default arduino uno is 2341 and 0043 respectively.
     <usb-device vendor-id="2341" product-id="0043" />
  
 

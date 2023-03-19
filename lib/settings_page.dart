@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:antbike/login.dart';
 import 'package:antbike/signup.dart';
+import 'package:flutter/services.dart';
+
+// Initialize the method channel
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -12,7 +15,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _darkTheme = false;
   TextEditingController _pidController = TextEditingController();
-  TextEditingController _uidController = TextEditingController();
+  TextEditingController _vidController = TextEditingController();
+  static const platform = MethodChannel('com.example.antbike/deviceFilter');
 
   @override
   void initState() {
@@ -25,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _darkTheme = (prefs.getBool('darkTheme') ?? false);
       _pidController.text = (prefs.getString('PID') ?? '');
-      _uidController.text = (prefs.getString('UID') ?? '');
+      _vidController.text = (prefs.getString('VID') ?? '');
     });
   }
 
@@ -33,7 +37,17 @@ class _SettingsPageState extends State<SettingsPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('darkTheme', _darkTheme);
     prefs.setString('PID', _pidController.text);
-    prefs.setString('UID', _uidController.text);
+    prefs.setString('VID', _vidController.text);
+
+    // Call the native Android function to update the USB device filter
+    try {
+      await platform.invokeMethod('updateDeviceFilter', {
+        "vendorID": _vidController.text,
+        "productID": _pidController.text,
+      });
+    } on PlatformException catch (e) {
+      // Handle the error if any
+    }
   }
 
   @override
@@ -68,8 +82,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
             TextField(
-              controller: _uidController,
-              decoration: InputDecoration(labelText: 'UID'),
+              controller: _vidController,
+              decoration: InputDecoration(labelText: 'VID'),
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ],
             ),
             ElevatedButton(
               onPressed: () {
@@ -78,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   SnackBar(content: Text('Settings saved')),
                 );
               },
-              child: Text('Save PID and UID'),
+              child: Text('Save VID and PID'),
             ),
             SizedBox(height: 10),
             Row(

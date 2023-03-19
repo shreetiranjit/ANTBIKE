@@ -6,15 +6,16 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:usb_serial/usb_serial.dart';
  
 
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
     runApp(MyApp());
   });
-}
-
+ }
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,8 @@ class _EVControlPageState extends State<EVControlPage> {
     await port.setDTR(true);
     await port.setRTS(true);
     port.setPortParameters(
-        9600, UsbPort.DATABITS_8, UsbPort.STOPBITS_1, UsbPort.PARITY_NONE);
+        115200
+        , UsbPort.DATABITS_8, UsbPort.STOPBITS_1, UsbPort.PARITY_NONE);
 
     Uint8List dataToSend = Uint8List.fromList([
       _isForward ? 1 : 0, // Send 1 for Forward, 0 for Reverse (D3)
@@ -92,7 +94,7 @@ class _EVControlPageState extends State<EVControlPage> {
 
     await port.write(dataToSend);
 
-    await Future.delayed(Duration(seconds: 1));
+   // await Future.delayed(Duration(seconds: 1));
     await port.close();
   }
 
