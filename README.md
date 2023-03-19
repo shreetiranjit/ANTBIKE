@@ -43,6 +43,7 @@ flutter run
 ## Arduino
 
 Upload the Arduino code provided in this repository to your Arduino Uno R3 board. 
+The file is called arduino_sketch.ino in the main branch.
 Connect the 2-channel relay module to the Arduino board with the following connections:
 
 - Direction Relay: Pin D3
