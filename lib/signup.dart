@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  bool _hidePassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,14 +19,19 @@ class SignUpPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Container(
-        color: Colors.white,
-        child: Center(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlutterLogo(size: 150),
+              Text(
+                "Sign up",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               SizedBox(height: 50),
               _buildNameField(),
               SizedBox(height: 20),
@@ -37,7 +49,6 @@ class SignUpPage extends StatelessWidget {
 
   Widget _buildNameField() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
         decoration: InputDecoration(
           labelText: "Name",
@@ -48,7 +59,6 @@ class SignUpPage extends StatelessWidget {
 
   Widget _buildEmailField() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
@@ -60,11 +70,18 @@ class SignUpPage extends StatelessWidget {
 
   Widget _buildPasswordField() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
-        obscureText: true,
+        obscureText: _hidePassword,
         decoration: InputDecoration(
           labelText: "Password",
+          suffixIcon: IconButton(
+            icon: Icon(_hidePassword ? Icons.visibility : Icons.visibility_off),
+            onPressed: () {
+              setState(() {
+                _hidePassword = !_hidePassword;
+              });
+            },
+          ),
         ),
       ),
     );
@@ -73,9 +90,8 @@ class SignUpPage extends StatelessWidget {
   Widget _buildSignUpButton(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: FloatingActionButton(
-        backgroundColor: Colors.blue,
+      height: 50,
+      child: ElevatedButton(
         child: Text("Sign up"),
         onPressed: () {
           // perform sign-up action
