@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'EV Control App',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
@@ -240,11 +241,15 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
-          ListTile(
-            title: Text('Login as user'),
-            onTap: () {
-              LoginPage();
-            },
+          FloatingActionButton(
+                    child: Text("LOGIN"),
+ 
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    },
           ),
         ],
       ),
