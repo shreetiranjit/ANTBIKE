@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   url_launcher: ^6.0.12
   usb_serial: ^0.4.0
+  shared_preferences: ^2.0.13
+
 
 flutter:
   uses-material-design: true

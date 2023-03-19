@@ -1,9 +1,10 @@
-import 'dart:typed_data';
+ 
+import 'package:antbike/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:usb_serial/usb_serial.dart';
-import 'login.dart';
+ 
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -214,45 +215,6 @@ class _EVControlPageState extends State<EVControlPage> {
   }
 }
 
-class SettingsPage extends StatefulWidget {
-  @override
-  _SettingsPageState createState() => _SettingsPageState();
-}
 
-class _SettingsPageState extends State<SettingsPage> {
-  bool _darkTheme = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Settings'),
-      ),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            title: Text('Dark theme'),
-            trailing: Switch(
-              value: _darkTheme,
-              onChanged: (bool value) {
-                setState(() {
-                  _darkTheme = value;
-                });
-              },
-            ),
-          ),
-          FloatingActionButton(
-                    child: Text("LOGIN"),
- 
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
-                    },
-          ),
-        ],
-      ),
-    );
-  }
-}
+
