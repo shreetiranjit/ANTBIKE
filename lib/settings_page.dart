@@ -57,6 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
       home: Scaffold(
         appBar: AppBar(
           title: Text('Settings'),
+          backgroundColor: Color.fromARGB(255, 116, 29, 132),
         ),
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -90,12 +91,15 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
             ElevatedButton(
-              onPressed: () {
-                _saveSettings();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Settings saved')),
-                );
-              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 116, 29, 132)),
+              onPressed: null,
+              // () {
+              //   _saveSettings();
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(content: Text('Settings saved')),
+              //   );
+              // },
               child: Text('Save VID and PID'),
             ),
             SizedBox(height: 10),
@@ -103,6 +107,8 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 116, 29, 132)),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -112,6 +118,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Text('Login'),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 116, 29, 132)),
                   onPressed: () {
                     Navigator.push(
                       context,
