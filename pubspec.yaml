@@ -9,11 +9,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  url_launcher: ^6.0.12
+  url_launcher: ^6.1.10
   usb_serial: ^0.4.0
   shared_preferences: ^2.0.13
-
-
+  flutter_map: ^0.14.0
+  latlong2: ^0.8.0
+  geolocator: ^7.6.2
+  battery_indicator: ^0.1.0
+  audioplayers: ^0.20.1
 flutter:
   uses-material-design: true
 
