@@ -9,7 +9,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:battery_indicator/battery_indicator.dart';
 import 'dart:async';
-import 'dart:convert';
 
 class EVControlPage extends StatefulWidget {
   @override
@@ -21,15 +20,22 @@ class _EVControlPageState extends State<EVControlPage> {
   bool _isHeadlightOn = false;
   bool _isPowerOn = true;
   int _speed = 0;
+  UsbPort? _port;
+  bool _isConnected = false;
+
+  void initState() {
+    _connectToArduino();
+    super.initState();
+  }
+
   AudioCache cache = new AudioCache();
-  void _toggleDirection()   {
-    setState(()  {
+  void _toggleDirection() {
+    setState(() {
       _isForward = !_isForward;
-      
     });
     _sendToArduino();
     cache.play('gear.mp3');
-    return; 
+    return;
   }
 
   void _toggleHeadlight() {
@@ -44,41 +50,62 @@ class _EVControlPageState extends State<EVControlPage> {
       _isPowerOn = !_isPowerOn;
     });
   }
- 
 
-Future<void> _sendToArduino() async {
-  List<UsbDevice> devices = await UsbSerial.listDevices();
-  if (devices.isEmpty) {
-    print('No USB devices found');
-    return;
+  Future<void> _connectToArduino() async {
+    if (_isConnected) return; // If already connected, do nothing
+
+    List<UsbDevice> devices = await UsbSerial.listDevices();
+    if (devices.isEmpty) {
+      print('No USB devices found');
+      return;
+    }
+
+    if (devices.length == 0) {
+      return;
+    }
+
+    _port = (await devices[0].create())!;
+    bool openResult = await _port!.open();
+    if (!openResult) {
+      print("Failed to open");
+      return;
+    }
+
+    await _port!.setDTR(true);
+    await _port!.setRTS(true);
+    _port!.setPortParameters(
+        115200, UsbPort.DATABITS_8, UsbPort.STOPBITS_1, UsbPort.PARITY_NONE);
+    _isConnected = true;
+    print("Connected to Arduino");
   }
 
-  UsbPort port;
-  if (devices.length == 0) {
-    return;
+  Future<void> _sendToArduino() async {
+    if (!_isConnected) {
+      print("Not connected to Arduino");
+      return;
+    }
+
+    Uint8List dataToSend = Uint8List.fromList([
+      _isForward ? 1 : 0, // Send 1 for Forward, 0 for Reverse (D3)
+      _isHeadlightOn
+          ? 1
+          : 0 // Send 1 for Headlight ON, 0 for Headlight OFF (D4)
+    ]);
+
+    await _port!.write(dataToSend);
+    // await Future.delayed(Duration(seconds: 1));
   }
-  port = (await devices[0].create())!;
-  bool openResult = await port.open();
-  if (!openResult) {
-    print("Failed to open");
-    return;
-  }
 
-  await port.setDTR(true);
-  await port.setRTS(true);
-  port.setPortParameters(
-      115200, UsbPort.DATABITS_8, UsbPort.STOPBITS_1, UsbPort.PARITY_NONE);
+  // Future<void> _disconnectFromArduino() async {
+  //   if (!_isConnected) {
+  //     print("Not connected to Arduino");
+  //     return;
+  //   }
 
-  Uint8List dataToSend = Uint8List.fromList([
-    _isForward ? 1 : 0, // Send 1 for Forward, 0 for Reverse (D3)
-    _isHeadlightOn ? 1 : 0 // Send 1 for Headlight ON, 0 for Headlight OFF (D4)
-  ]);
-
-  await port.write(dataToSend);
- await Future.delayed(Duration(seconds: 1));
-
-  await port.close();
-}
+  //   await _port?.close();
+  //   _isConnected = false;
+  //   print("Disconnected from Arduino");
+  // }
 
   Future<LatLng> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
